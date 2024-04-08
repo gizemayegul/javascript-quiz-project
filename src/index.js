@@ -164,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Get all the choice elements. You can use the `document.querySelectorAll()` method.
 
     const choices = document.querySelectorAll("input[name=choice]");
+    console.log(choices);
 
     // 2. Loop through all the choice elements and check which one is selected
     // Hint: Radio input elements have a property `.checked` (e.g., `element.checked`).
@@ -186,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // nextButtonHandler();
+  nextButtonHandler();
   function showResults() {
     // YOUR CODE HERE:
     //
