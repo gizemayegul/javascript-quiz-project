@@ -70,8 +70,35 @@ document.addEventListener("DOMContentLoaded", () => {
   showQuestion();
 
   /************  TIMER  ************/
+  const startTimer = () => {
+    return setInterval(() => {
+      // Convert the time remaining in seconds to minutes and seconds, and pad the numbers with zeros if needed
+      const minutes = Math.floor(quiz.timeRemaining / 60)
+        .toString()
+        .padStart(2, "0");
+      const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
 
-  let timer;
+      // Display the time remaining in the time remaining container
+      const timeRemainingContainer = document.getElementById("timeRemaining");
+      timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+
+      // Update the time remaining
+      quiz.timeRemaining--;
+
+      // If the time has run out, show the results
+      if (quiz.timeRemaining <= 0) {
+        clearInterval(timer);
+        showResults();
+      }
+    }, 1000);
+  };
+  let timer = startTimer();
+
+  /************ RESTART-TIMER  ************/
+  const restartTimer = () => {
+    clearInterval(timer);
+    timer = startTimer();
+  };
 
   /************  EVENT LISTENERS  ************/
 
@@ -84,9 +111,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // showResults() - Displays the end view and the quiz results
 
   function showQuestion() {
+    // A function that displays the current question and its choices
     // If the quiz has ended, show the results
     if (quiz.hasEnded()) {
+      // Show the end view with the results
       showResults();
+
+      // Clear the timer interval to stop the timer
+      clearInterval(timer);
+      // Return to stop the rest of the function from running
       return;
     }
 
@@ -164,7 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Get all the choice elements. You can use the `document.querySelectorAll()` method.
 
     const choices = document.querySelectorAll("input[name=choice]");
-    console.log(choices);
 
     // 2. Loop through all the choice elements and check which one is selected
     // Hint: Radio input elements have a property `.checked` (e.g., `element.checked`).
@@ -187,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  nextButtonHandler();
+  // nextButtonHandler();
   function showResults() {
     // YOUR CODE HERE:
     //
@@ -203,12 +235,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // resetButtonHandler()
   const resetButton = document.querySelector("#restartButton");
-  // console.log(resetButton);
   resetButton.addEventListener("click", () => {
+    //hide endview
     endView.style.display = "none";
+    //show quizview
     quizView.style.display = "block";
     quiz.currentQuestionIndex = 0;
     quiz.correctAnswers = 0;
+
+    //Update to initial value
+    quiz.timeRemaining = 120;
+
+    ///Update the timer text in the quiz view to the initial value
+    const minutes = Math.floor(quiz.timeRemaining / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+    //Start the timer countdown again
+    restartTimer();
     quiz.shuffleQuestions();
     showQuestion();
   });
