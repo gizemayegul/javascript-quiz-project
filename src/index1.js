@@ -69,36 +69,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // Show first question
   showQuestion();
 
-  /************  TIMER  ************/
-  const startTimer = () => {
-    return setInterval(() => {
-      // Convert the time remaining in seconds to minutes and seconds, and pad the numbers with zeros if needed
-      const minutes = Math.floor(quiz.timeRemaining / 60)
-        .toString()
-        .padStart(2, "0");
-      const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+  /************  TIMER  ************/ //!Another solution
+  let timer = setInterval(() => {
+    // Convert the time remaining in seconds to minutes and seconds, and pad the numbers with zeros if needed
+    const minutes = Math.floor(quiz.timeRemaining / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
 
-      // Display the time remaining in the time remaining container
-      const timeRemainingContainer = document.getElementById("timeRemaining");
-      timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+    // Display the time remaining in the time remaining container
+    const timeRemainingContainer = document.getElementById("timeRemaining");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
 
-      // Update the time remaining
-      quiz.timeRemaining--;
+    // Update the time remaining
+    quiz.timeRemaining--;
 
-      // If the time has run out, show the results
-      if (quiz.timeRemaining <= 0) {
-        clearInterval(timer);
-        showResults();
-      }
-    }, 1000);
-  };
-  let timer = startTimer();
-
-  /************ RESTART-TIMER  ************/
-  const restartTimer = () => {
-    clearInterval(timer);
-    timer = startTimer();
-  };
+    // If the time has run out, show the results
+    if (quiz.timeRemaining <= 0) {
+      clearInterval(timer);
+      showResults();
+    }
+  }, 1000);
 
   /************  EVENT LISTENERS  ************/
 
@@ -244,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     quiz.correctAnswers = 0;
 
     //Update to initial value
+    clearInterval(timer);
     quiz.timeRemaining = 120;
 
     ///Update the timer text in the quiz view to the initial value
@@ -253,11 +245,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
     timeRemainingContainer.innerText = `${minutes}:${seconds}`;
     //Start the timer countdown again
-    restartTimer();
+    //!Another solution
+    timer = setInterval(() => {
+      // Convert the time remaining in seconds to minutes and seconds, and pad the numbers with zeros if needed
+      const minutes = Math.floor(quiz.timeRemaining / 60)
+        .toString()
+        .padStart(2, "0");
+      const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
 
-    //OR
-    // clearInterval(timer);
-    // timer = startTimer();
+      // Display the time remaining in the time remaining container
+      const timeRemainingContainer = document.getElementById("timeRemaining");
+      timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+
+      // Update the time remaining
+      quiz.timeRemaining--;
+
+      // If the time has run out, show the results
+      if (quiz.timeRemaining <= 0) {
+        clearInterval(timer);
+        showResults();
+      }
+    }, 1000);
+
     quiz.shuffleQuestions();
     showQuestion();
   });
